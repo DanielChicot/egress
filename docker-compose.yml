@@ -1,0 +1,18 @@
+version: "3.3"
+
+services:
+  localstack:
+    image: localstack/localstack:latest
+    ports:
+      - 4566:4566
+    container_name: localstack
+    environment:
+      - SERVICES=s3,sqs
+
+  localstack-init:
+    image: localstack-init
+    build:
+      context: images/localstack
+    container_name: localstack-init
+    depends_on:
+      - localstack
