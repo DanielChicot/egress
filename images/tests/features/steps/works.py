@@ -8,7 +8,10 @@ import boto3
 def step_impl(context):
     sqs = sqs_client()
     message = {
-        "data": "hello, world"
+        "Records": [
+            {"s3": {"object": {"key": "data-egress-testing-output/export-01.csv"}}},
+            {"s3": {"object": {"key": "dataegress/cbol-report/2021-05-01.csv"}}}
+        ]
     }
     message_body = json.dumps(message)
     sqs.send_message(QueueUrl="http://localstack:4566/000000000000/integration-queue",

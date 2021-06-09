@@ -22,15 +22,18 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0")
+	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.5.0")
 	implementation(platform("software.amazon.awssdk:bom:2.16.79"))
 	implementation("software.amazon.awssdk:sqs")
+	implementation("com.google.code.gson:gson:2.8.6")
 
 	testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
 	testImplementation("io.kotest:kotest-assertions-core-jvm:4.6.0")
 	testImplementation("io.kotest:kotest-assertions-json-jvm:4.6.0")
 	testImplementation("io.kotest:kotest-property-jvm:4.6.0")
 	testImplementation("io.kotest:kotest-runner-junit5-jvm:4.6.0")
-	testImplementation("io.kotest:kotest-extensions-spring:4.6.0")
+	testImplementation("io.kotest:kotest-extensions-spring:4.4.3")
 	testImplementation("org.springframework.boot:spring-boot-starter-test") {
 		exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
 	}

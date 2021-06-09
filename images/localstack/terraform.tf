@@ -17,10 +17,83 @@ provider "aws" {
   skip_requesting_account_id  = true
 
   endpoints {
-    sqs            = "http://localstack:4566"
+    sqs      = "http://localstack:4566"
+    dynamodb = "http://localstack:4566"
   }
 }
 
 resource "aws_sqs_queue" "integration_queue" {
   name = "integration-queue"
+}
+
+resource "aws_dynamodb_table" "data_egress" {
+  name           = "data-egress"
+  hash_key       = "source_prefix"
+  range_key      = "pipeline_name"
+  read_capacity  = 20
+  write_capacity = 20
+
+  attribute {
+    name = "source_prefix"
+    type = "S"
+  }
+
+  attribute {
+    name = "pipeline_name"
+    type = "S"
+  }
+}
+
+resource "aws_dynamodb_table_item" "opsmi_data_egress_config" {
+  table_name = aws_dynamodb_table.data_egress.name
+  hash_key   = aws_dynamodb_table.data_egress.hash_key
+  range_key  = aws_dynamodb_table.data_egress.range_key
+
+  item = <<ITEM
+  {
+    "source_prefix":          {"S":     "opsmi/"},
+    "pipeline_name":          {"S":     "OpsMI"},
+    "recipient_name":         {"S":     "OpsMI"},
+    "transfer_type":          {"S":     "S3"},
+    "source_bucket":          {"S":     "data-egress-source"},
+    "destination_bucket":     {"S":     "data-egress-target"},
+    "destination_prefix":     {"S":     "/"}
+  }
+  ITEM
+}
+
+resource "aws_dynamodb_table_item" "cbol_data_egress_config" {
+  table_name = aws_dynamodb_table.data_egress.name
+  hash_key   = aws_dynamodb_table.data_egress.hash_key
+  range_key  = aws_dynamodb_table.data_egress.range_key
+
+  item = <<ITEM
+  {
+    "source_prefix":          {"S":     "dataegress/cbol-report/*"},
+    "pipeline_name":          {"S":     "CBOL"},
+    "recipient_name":         {"S":     "CBOL"},
+    "transfer_type":          {"S":     "S3"},
+    "source_bucket":          {"S":     "data-egress-source"},
+    "destination_bucket":     {"S":     "data-egress-target"},
+    "destination_prefix":     {"S":     "cbol/"}
+  }
+  ITEM
+}
+
+resource "aws_dynamodb_table_item" "dataworks_data_egress_config" {
+  table_name = aws_dynamodb_table.data_egress.name
+  hash_key   = aws_dynamodb_table.data_egress.hash_key
+  range_key  = aws_dynamodb_table.data_egress.range_key
+
+  item = <<ITEM
+  {
+    "source_prefix":          {"S":    "dataworks-egress-testing-input/"},
+    "pipeline_name":          {"S":    "data-egress-testing"},
+    "recipient_name":         {"S":    "DataWorks"},
+    "transfer_type":          {"S":    "S3"},
+    "source_bucket":          {"S":    "data-egress-source"},
+    "destination_bucket":     {"S":    "data-egress-target"},
+    "destination_prefix":     {"S":    "data-egress-testing-output/"}
+  }
+  ITEM
 }

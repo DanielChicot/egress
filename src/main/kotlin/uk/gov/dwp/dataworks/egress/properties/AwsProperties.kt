@@ -6,8 +6,16 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 @ConfigurationProperties(prefix = "aws")
-class AwsProperties(var sqsQueueUrl: String = "") {
+class AwsProperties(var sqsQueueUrl: String = "",
+                    var sqsCheckIntervalMs: Int = 10_000,
+                    var sqsCheckInitialDelayMs: Int = 0) {
 
     @Bean
     fun sqsQueueUrl() = sqsQueueUrl
+
+    @Bean
+    fun sqsCheckIntervalMs() = sqsCheckIntervalMs
+
+    @Bean
+    fun sqsCheckInitialDelayMs() = sqsCheckInitialDelayMs
 }

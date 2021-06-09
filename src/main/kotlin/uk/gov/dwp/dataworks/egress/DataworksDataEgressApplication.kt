@@ -1,19 +1,25 @@
 package uk.gov.dwp.dataworks.egress
 
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.runBlocking
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
-import software.amazon.awssdk.services.sqs.SqsAsyncClient
-import software.amazon.awssdk.services.sqs.model.ReceiveMessageRequest
+import org.springframework.scheduling.annotation.EnableScheduling
+import software.amazon.awssdk.services.sqs.model.DeleteMessageResponse
+import uk.gov.dwp.dataworks.egress.services.QueueService
 
 @SpringBootApplication
-class DataworksDataEgressApplication(private val sqs: SqsAsyncClient,
-									 private val sqsQueueUrl: String): CommandLineRunner {
+class DataworksDataEgressApplication(private val queueService: QueueService): CommandLineRunner {
 	override fun run(vararg args: String?) {
-		println("sqsQueueUrl: '$sqsQueueUrl'.")
-//		val request = ReceiveMessageRequest.builder().queueUrl()
-		//sqs.receiveMessage()
-		println(sqs)
+		runBlocking {
+			queueService.incomingPrefixes()
+				.map { it.first }
+				.map(queueService::deleteMessage)
+				.map(DeleteMessageResponse::responseMetadata)
+				.collect(::println)
+		}
 	}
 }
 
