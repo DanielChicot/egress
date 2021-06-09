@@ -20,13 +20,16 @@ dependencies {
 	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
 	implementation("org.springframework.boot:spring-boot-starter")
+	implementation("org.springframework.boot:spring-boot-starter-cache")
+	implementation("org.springframework.retry:spring-retry")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.5.0")
 
+	implementation("com.amazonaws:aws-java-sdk-s3:1.11.946")
+
 	implementation(platform("software.amazon.awssdk:bom:2.16.79"))
-	implementation("software.amazon.awssdk:s3")
 	implementation("software.amazon.awssdk:sqs")
 	implementation("software.amazon.awssdk:dynamodb")
 

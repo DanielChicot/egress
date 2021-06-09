@@ -10,10 +10,9 @@ import java.util.*
 
 class IntegrationTests: StringSpec() {
     init {
-        "Should be able to process HTME style encrypted files" {
+        "Should be able to process files encrypted by EMR" {
             val message = """{
                 "Records": [
-                    { "s3": { "object": { "key": "data-egress-testing-output/export-01.csv" } } },
                     { "s3": { "object": { "key": "dataegress/cbol-report/${todaysDate()}/cbol.csv" } } }
                 ]
             }"""
@@ -31,9 +30,11 @@ class IntegrationTests: StringSpec() {
 
 
     companion object {
+
         private val applicationContext by lazy {
             AnnotationConfigApplicationContext(TestConfiguration::class.java)
         }
+
         private val sqs = applicationContext.getBean(SqsAsyncClient::class.java)
         private fun todaysDate() = SimpleDateFormat("yyyy-MM-dd").format(Date())
     }

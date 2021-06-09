@@ -14,10 +14,16 @@ import org.springframework.stereotype.Service
 import software.amazon.awssdk.services.sqs.SqsAsyncClient
 import software.amazon.awssdk.services.sqs.model.*
 import uk.gov.dwp.dataworks.egress.services.QueueService
+import kotlin.time.Duration
+import kotlin.time.ExperimentalTime
+import kotlin.time.microseconds
+import kotlin.time.milliseconds
 
+@ExperimentalTime
 @Service
 class QueueServiceImpl(private val sqs: SqsAsyncClient,
-                       private val sqsQueueUrl: String): QueueService {
+                       private val sqsQueueUrl: String,
+                       private val sqsCheckIntervalMs: Int): QueueService {
 
     override suspend fun incomingPrefixes(): Flow<Pair<String, List<String>>> = flow {
         while (true) {
@@ -34,7 +40,7 @@ class QueueServiceImpl(private val sqs: SqsAsyncClient,
                 }
             } else {
                 logger.info("Nothing on the queue")
-                delay(5000)
+                delay(Duration.milliseconds(sqsCheckIntervalMs))
             }
         }
     }
