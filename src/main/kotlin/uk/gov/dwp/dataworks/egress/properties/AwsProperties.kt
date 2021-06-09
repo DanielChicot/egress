@@ -8,7 +8,8 @@ import org.springframework.context.annotation.Configuration
 @ConfigurationProperties(prefix = "aws")
 class AwsProperties(var sqsQueueUrl: String = "",
                     var sqsCheckIntervalMs: Int = 10_000,
-                    var sqsCheckInitialDelayMs: Int = 0) {
+                    var sqsCheckInitialDelayMs: Int = 0,
+                    var dataEgressTable: String = "data-egress") {
 
     @Bean
     fun sqsQueueUrl() = sqsQueueUrl
@@ -18,4 +19,7 @@ class AwsProperties(var sqsQueueUrl: String = "",
 
     @Bean
     fun sqsCheckInitialDelayMs() = sqsCheckInitialDelayMs
+
+    @Bean
+    fun dataEgressTable() = dataEgressTable
 }

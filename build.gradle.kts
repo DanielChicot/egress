@@ -24,8 +24,12 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.5.0")
+
 	implementation(platform("software.amazon.awssdk:bom:2.16.79"))
+	implementation("software.amazon.awssdk:s3")
 	implementation("software.amazon.awssdk:sqs")
+	implementation("software.amazon.awssdk:dynamodb")
+
 	implementation("com.google.code.gson:gson:2.8.6")
 
 	testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
@@ -43,6 +47,26 @@ tasks.withType<KotlinCompile> {
 	kotlinOptions {
 		freeCompilerArgs = listOf("-Xjsr305=strict")
 		jvmTarget = "11"
+	}
+}
+
+sourceSets {
+	create("integration") {
+		java.srcDir(file("src/integration/kotlin"))
+		compileClasspath += sourceSets.getByName("main").output + configurations.testRuntimeClasspath
+		runtimeClasspath += output + compileClasspath
+	}
+}
+
+tasks.register<Test>("integration") {
+	description = "Runs the integration tests"
+	group = "verification"
+	testClassesDirs = sourceSets["integration"].output.classesDirs
+	classpath = sourceSets["integration"].runtimeClasspath
+	useJUnitPlatform()
+	testLogging {
+		exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+		events = setOf(org.gradle.api.tasks.testing.logging.TestLogEvent.SKIPPED, org.gradle.api.tasks.testing.logging.TestLogEvent.PASSED, org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED, org.gradle.api.tasks.testing.logging.TestLogEvent.STANDARD_OUT)
 	}
 }
 

@@ -16,3 +16,11 @@ services:
     container_name: localstack-init
     depends_on:
       - localstack
+
+  dks:
+    image: dks
+    ports:
+      - 8443:8443
+    build:
+      context: images/dks
+    container_name: dks

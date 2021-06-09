@@ -69,7 +69,7 @@ resource "aws_dynamodb_table_item" "cbol_data_egress_config" {
 
   item = <<ITEM
   {
-    "source_prefix":          {"S":     "dataegress/cbol-report/*"},
+    "source_prefix":          {"S":     "dataegress/cbol-report/$TODAYS_DATE/"},
     "pipeline_name":          {"S":     "CBOL"},
     "recipient_name":         {"S":     "CBOL"},
     "transfer_type":          {"S":     "S3"},
@@ -87,7 +87,7 @@ resource "aws_dynamodb_table_item" "dataworks_data_egress_config" {
 
   item = <<ITEM
   {
-    "source_prefix":          {"S":    "dataworks-egress-testing-input/"},
+    "source_prefix":          {"S":    "dataworks-egress-testing-input/$TODAYS_DATE/*"},
     "pipeline_name":          {"S":    "data-egress-testing"},
     "recipient_name":         {"S":    "DataWorks"},
     "transfer_type":          {"S":    "S3"},

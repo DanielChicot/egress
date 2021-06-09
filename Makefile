@@ -1,4 +1,4 @@
-localstack: ## bring up localstack container and wait for it to be ready
+localstack:
 	docker-compose up -d localstack
 	@{ \
 		while ! docker logs localstack 2> /dev/null | grep -q "^Ready\." ; do \
@@ -7,3 +7,8 @@ localstack: ## bring up localstack container and wait for it to be ready
 		done; \
 	}
 	docker-compose up localstack-init
+
+dks:
+	docker-compose up -d dks
+
+services: localstack dks

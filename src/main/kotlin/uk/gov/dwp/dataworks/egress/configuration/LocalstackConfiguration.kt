@@ -7,6 +7,7 @@ import software.amazon.awssdk.auth.credentials.AwsBasicCredentials
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider
 import software.amazon.awssdk.awscore.client.builder.AwsClientBuilder
 import software.amazon.awssdk.regions.Region
+import software.amazon.awssdk.services.dynamodb.DynamoDbAsyncClient
 import software.amazon.awssdk.services.sqs.SqsAsyncClient
 import java.net.URI
 
@@ -16,6 +17,9 @@ class LocalstackConfiguration {
 
     @Bean
     fun sqsClient(): SqsAsyncClient = SqsAsyncClient.builder().localstack()
+
+    @Bean
+    fun dynamoDbClient(): DynamoDbAsyncClient = DynamoDbAsyncClient.builder().localstack()
 
     fun <B: AwsClientBuilder<B, C>?, C> AwsClientBuilder<B, C>.localstack(): C =
         run {

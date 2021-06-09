@@ -26,8 +26,7 @@ class QueueServiceImpl(private val sqs: SqsAsyncClient,
                 if (response.hasMessages()) {
                     val message = response.messages().first()
                     val receiptHandle = message.receiptHandle()
-                    val wtf = sqs.changeMessageVisibility(changeMessageVisibilityRequest(receiptHandle)).await()
-                    println(wtf.responseMetadata())
+                    sqs.changeMessageVisibility(changeMessageVisibilityRequest(receiptHandle)).await()
                     val body = gson.jsonObject(message.body())
                     if (body.has("Records")) {
                         emit(Pair(receiptHandle, messagePrefixes(body)))
